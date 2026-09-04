@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+option csharp_namespace = "LoyaltyHub.Loyalty.Api.Grpc";
+
+package loyalty;
+
+service LoyaltyScore {
+  rpc CalculateScore (CalculateScoreRequest) returns (CalculateScoreReply);
+  rpc GetScoreCalculationById (GetScoreCalculationByIdRequest) returns (ScoreCalculationReply);
+  rpc GetScoreCalculationsPaged (GetScoreCalculationsPagedRequest) returns (GetScoreCalculationsPagedReply);
+}
+
+message CalculateScoreRequest {
+  double purchase_amount = 1;
+  CustomerType customer_type = 2;
+  repeated double recent_purchases = 3;
+}
+
+enum CustomerType {
+  CUSTOMER_TYPE_UNSPECIFIED = 0;
+  CUSTOMER_TYPE_BRONZE = 1;
+  CUSTOMER_TYPE_SILVER = 2;
+  CUSTOMER_TYPE_GOLD = 3;
+}
+
+message CalculateScoreReply {
+  string calculation_id = 1;
+  double purchase_amount = 2;
+  CustomerType customer_type = 3;
+  int32 purchase_count = 4;
+  double base_score = 5;
+  double frequency_bonus = 6;
+  double high_purchase_bonus = 7;
+  double total_bonus = 8;
+  double final_score = 9;
+  string created_at_utc = 10;
+}
+
+message GetScoreCalculationByIdRequest {
+  string id = 1;
+  optional bool include_recent_purchases = 2;
+}
+
+message GetScoreCalculationsPagedRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+  optional bool include_recent_purchases = 3;
+}
+
+message ScoreCalculationReply {
+  string calculation_id = 1;
+  double purchase_amount = 2;
+  CustomerType customer_type = 3;
+  int32 purchase_count = 4;
+  double base_score = 5;
+  double frequency_bonus = 6;
+  double high_purchase_bonus = 7;
+  double total_bonus = 8;
+  double final_score = 9;
+  string created_at_utc = 10;
+  repeated double recent_purchases = 11;
+}
+
+message GetScoreCalculationsPagedReply {
+  repeated ScoreCalculationReply items = 1;
+  int32 total_count = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}
